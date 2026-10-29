@@ -1,0 +1,422 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevSalary AI | Indian Developer Salary Predictor</title>
+<style>
+:root {
+  --bg:#050d1c; --panel:#0b1830; --line:#19365e;
+  --blue:#168cff; --cyan:#32e5ef; --purple:#a33cff;
+  --text:#eff6ff; --muted:#9cb2d3; --green:#13e6a3;
+}
+* {box-sizing:border-box}
+html {scroll-behavior:smooth}
+body {
+  margin:0;background:radial-gradient(ellipse at 50% 0,#10264b 0,transparent 48%),var(--bg);
+  color:var(--text);font-family:Inter,system-ui,Arial,sans-serif;
+}
+button,input,select {font:inherit}
+header {
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:19px 5%;border-bottom:1px solid var(--line);
+  background:#061126eF;position:sticky;top:0;z-index:10;backdrop-filter:blur(14px);
+}
+.brand {font-size:24px;font-weight:850;letter-spacing:-1px}
+.brand span {color:var(--cyan)}
+.brand small {display:block;font-size:11px;color:var(--muted);font-weight:400;letter-spacing:0}
+nav {display:flex;gap:20px;flex-wrap:wrap}
+nav a {color:#c4d7f4;text-decoration:none;font-size:13px}
+nav a:hover {color:var(--cyan)}
+.wrap {width:min(1450px,92%);margin:auto}
+.hero {display:grid;grid-template-columns:1.3fr .7fr;gap:30px;align-items:center;padding:42px 0 30px}
+h1 {font-size:clamp(32px,4vw,53px);line-height:1.08;margin:0 0 17px;letter-spacing:-1.5px}
+.gradient {background:linear-gradient(90deg,var(--cyan),#588cff,var(--purple));color:transparent;background-clip:text}
+p {color:var(--muted);line-height:1.7}
+.pills {display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.pill {padding:9px 13px;background:#102448;border:1px solid var(--line);border-radius:25px;font-size:12px}
+.hero-card,.panel,.metric {
+  background:linear-gradient(145deg,#0c1c38,#071226);
+  border:1px solid var(--line);border-radius:14px;
+}
+.hero-card {padding:23px}
+.hero-card h3 {margin-top:0}
+.steps {display:grid;gap:17px}
+.step {display:flex;gap:12px;align-items:flex-start;color:#c7d8f1;font-size:13px;line-height:1.6}
+.num {flex-shrink:0;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:50%;width:30px;height:30px;display:grid;place-items:center;font-weight:bold}
+.layout {display:grid;grid-template-columns:1fr 1.08fr;gap:18px}
+.panel {padding:23px;min-width:0}
+.panel h2 {font-size:20px;margin:0 0 6px}
+.sub {font-size:13px;color:var(--muted);margin:0 0 24px}
+.formgrid {display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.field {min-width:0}
+label {display:block;font-size:13px;font-weight:650;margin-bottom:9px;color:#d8e7ff}
+select,input[type=number] {
+  width:100%;padding:13px;background:#07142a;color:white;
+  border:1px solid #29466f;border-radius:9px;outline:none;
+}
+select:focus,input:focus {border-color:var(--cyan)}
+input[type=range] {width:100%;accent-color:var(--blue);margin-top:12px}
+.rangehead {display:flex;justify-content:space-between;align-items:center}
+.rangehead strong {color:var(--cyan)}
+button {
+  cursor:pointer;border:0;color:white;border-radius:10px;font-weight:750;
+  transition:transform .2s,filter .2s;
+}
+button:hover {transform:translateY(-2px);filter:brightness(1.1)}
+.primary {width:100%;padding:16px;margin-top:26px;background:linear-gradient(100deg,#078cff,#624cff,#aa31ee)}
+.status {padding:12px;border-radius:9px;background:#06342f;color:var(--green);font-size:13px;margin:20px 0;border:1px solid #087d68}
+.metrics {display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.metric {padding:18px}
+.metric .label {color:var(--muted);font-size:12px}
+.metric .value {font-size:clamp(20px,2.2vw,29px);font-weight:850;margin:12px 0;color:white;overflow-wrap:anywhere}
+.metric .hint {font-size:11px;color:var(--cyan)}
+.profile {display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:22px;font-size:13px}
+.profile span {color:var(--muted)}
+.note {margin-top:18px;padding:13px;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:12px;line-height:1.6}
+.lower {display:grid;grid-template-columns:1.15fr 1fr .7fr;gap:16px;margin:18px 0 28px}
+.lower .panel {padding:17px}
+.lower h3 {font-size:15px;margin:0 0 15px}
+.tablewrap {overflow:auto}
+table {border-collapse:collapse;width:100%;font-size:11px;white-space:nowrap}
+th,td {padding:9px 7px;text-align:left;border-bottom:1px solid #193052}
+th {color:var(--cyan);background:#102343}
+td {color:#ccdcf3}
+.chart {display:flex;align-items:flex-end;justify-content:space-around;gap:13px;height:190px;padding:10px 0 0;border-bottom:1px solid #294466}
+.bar-group {flex:1;height:100%;display:flex;align-items:flex-end;justify-content:center;gap:4px;position:relative}
+.bar {width:23%;max-width:27px;border-radius:5px 5px 0 0;min-height:3px;transition:height .4s}
+.bar.a {background:var(--blue)} .bar.b {background:var(--green)} .bar.c {background:var(--purple)}
+.chartlabels {display:flex;justify-content:space-around;gap:6px;text-align:center;font-size:10px;color:var(--muted);margin-top:10px}
+.legend {font-size:11px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;margin-bottom:5px}
+.dot {display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}
+.skills {display:flex;gap:7px;flex-wrap:wrap}
+.skill {background:#12345c;border:1px solid #254a77;border-radius:20px;padding:7px 10px;font-size:11px}
+.features {font-size:12px;line-height:2;color:#ccdcf3;padding-left:18px}
+footer {padding:20px 4%;border-top:1px solid var(--line);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.disclaimer {color:#ffc978;font-size:11px;line-height:1.6}
+@media(max-width:900px) {
+  .hero,.layout {grid-template-columns:1fr}
+  .lower {grid-template-columns:1fr 1fr}
+  .lower .panel:last-child {grid-column:1/-1}
+  header {flex-wrap:wrap}
+}
+@media(max-width:540px) {
+  header {padding:14px 4%}
+  nav {gap:12px}
+  .wrap {width:94%}
+  .hero {padding-top:28px}
+  .formgrid,.metrics {grid-template-columns:1fr}
+  .panel {padding:16px}
+  .lower {grid-template-columns:1fr}
+  .lower .panel:last-child {grid-column:auto}
+  .profile {grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">DevSalary <span>AI</span>
+    <small>Indian Developer Salary Prediction System</small>
+  </div>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#predictor">Predictor</a>
+    <a href="#dataset">Dataset</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<main class="wrap">
+<section class="hero" id="home">
+  <div>
+    <h1><span class="gradient">AI Indian Developer</span><br>Salary Prediction System</h1>
+    <p>Apni professional details select karein aur ek demo salary model se expected annual aur monthly salary estimate dekhein.</p>
+    <div class="pills">
+      <span class="pill">⚡ Machine Learning concept</span>
+      <span class="pill">📊 Salary Analytics</span>
+      <span class="pill">💻 Mobile Friendly</span>
+    </div>
+  </div>
+  <div class="hero-card">
+    <h3>💡 How It Works?</h3>
+    <div class="steps">
+      <div class="step"><span class="num">1</span><div>Apna job role, experience, city aur skill choose karein.</div></div>
+      <div class="step"><span class="num">2</span><div>Demo formula selected details ko analyze karta hai.</div></div>
+      <div class="step"><span class="num">3</span><div>Annual aur monthly estimated salary dekhein.</div></div>
+    </div>
+    <div class="note">ⓘ Frontend demo — verified salary data ya trained ML model se connected nahi hai.</div>
+  </div>
+</section>
+
+<section class="layout" id="predictor">
+  <div class="panel">
+    <h2>🧑‍💻 Enter Your Details</h2>
+    <p class="sub">Apna developer profile fill karein.</p>
+    <form id="salaryForm">
+      <div class="formgrid">
+        <div class="field">
+          <label for="role">Job Role</label>
+          <select id="role">
+            <option>Software Developer</option>
+            <option>AI / ML Engineer</option>
+            <option>Web Developer</option>
+            <option>Data Analyst</option>
+            <option>Backend Developer</option>
+            <option>Frontend Developer</option>
+          </select>
+        </div>
+        <div class="field">
+          <div class="rangehead">
+            <label for="experience">Experience (Years)</label>
+            <strong id="expValue">2 years</strong>
+          </div>
+          <input type="range" id="experience" min="0" max="15" value="2">
+          <div class="rangehead" style="font-size:11px;color:var(--muted)">
+            <span>Fresher</span><span>15+ years</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="city">City</label>
+          <select id="city">
+            <option>Pune</option>
+            <option>Bengaluru</option>
+            <option>Mumbai</option>
+            <option>Hyderabad</option>
+            <option>Delhi NCR</option>
+            <option>Chennai</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="skill">Main Skill</label>
+          <select id="skill">
+            <option>Python</option>
+            <option>JavaScript</option>
+            <option>Java</option>
+            <option>Machine Learning</option>
+            <option>SQL</option>
+            <option>React</option>
+            <option>C++</option>
+          </select>
+        </div>
+      </div>
+      <button class="primary" type="submit">🚀 Predict My Salary</button>
+    </form>
+  </div>
+
+  <div class="panel" aria-live="polite">
+    <h2 style="color:var(--green)">📊 Prediction Result</h2>
+    <p class="sub">Aapke selected profile ka demo estimate.</p>
+    <div class="status" id="status">✓ Ready — predict button par click karein.</div>
+    <div class="metrics">
+      <div class="metric">
+        <div class="label">Estimated Annual Salary</div>
+        <div class="value" id="annual">₹6,20,000</div>
+        <div class="hint">INR / year · demo</div>
+      </div>
+      <div class="metric">
+        <div class="label">Estimated Monthly Salary</div>
+        <div class="value" id="monthly">₹51,667</div>
+        <div class="hint">INR / month · demo</div>
+      </div>
+    </div>
+    <h3 style="margin-top:22px">Your Selected Profile</h3>
+    <div class="profile">
+      <span>Job Role</span><strong id="outRole">Software Developer</strong>
+      <span>Experience</span><strong id="outExp">2 years</strong>
+      <span>City</span><strong id="outCity">Pune</strong>
+      <span>Main Skill</span><strong id="outSkill">Python</strong>
+    </div>
+    <div class="note">⚠️ Estimate sirf educational demo formula par based hai. Actual salary company, interview, education, skills aur current market par depend karti hai.</div>
+  </div>
+</section>
+
+<section class="lower">
+  <div class="panel" id="dataset">
+    <h3>🗄️ Dataset Preview</h3>
+    <p class="sub">Example records for demonstration.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Role</th><th>Exp.</th><th>City</th><th>Skill</th><th>Annual ₹</th></tr></thead>
+        <tbody id="datasetRows"></tbody>
+      </table>
+    </div>
+    <button type="button" id="download" class="primary" style="padding:11px;margin-top:15px">⬇ Download Demo CSV</button>
+  </div>
+
+  <div class="panel">
+    <h3>📈 Example Salary Distribution</h3>
+    <p class="sub">Illustrative values, not market statistics.</p>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--blue)"></i>Entry</span>
+      <span><i class="dot" style="background:var(--green)"></i>Mid</span>
+      <span><i class="dot" style="background:var(--purple)"></i>Senior</span>
+    </div>
+    <div class="chart" aria-label="Illustrative salary chart">
+      <div class="bar-group"><i class="bar a" style="height:28%"></i><i class="bar b" style="height:48%"></i><i class="bar c" style="height:72%"></i></div>
+      <div class="bar-group"><i class="bar a" style="height:38%"></i><i class="bar b" style="height:65%"></i><i class="bar c" style="height:92%"></i></div>
+      <div class="bar-group"><i class="bar a" style="height:24%"></i><i class="bar b" style="height:45%"></i><i class="bar c" style="height:68%"></i></div>
+      <div class="bar-group"><i class="bar a" style="height:32%"></i><i class="bar b" style="height:55%"></i><i class="bar c" style="height:80%"></i></div>
+    </div>
+    <div class="chartlabels">
+      <span>Software<br>Developer</span>
+      <span>AI / ML<br>Engineer</span>
+      <span>Web<br>Developer</span>
+      <span>Data<br>Analyst</span>
+    </div>
+  </div>
+
+  <div class="panel" id="about">
+    <h3>⚙️ Skills & Features</h3>
+    <div class="skills">
+      <span class="skill">HTML</span><span class="skill">CSS</span>
+      <span class="skill">JavaScript</span><span class="skill">Python</span>
+      <span class="skill">Pandas</span><span class="skill">Scikit-learn</span>
+    </div>
+    <h3 style="margin-top:24px">✓ Project Features</h3>
+    <ul class="features">
+      <li>Responsive web interface</li>
+      <li>Salary estimate calculator</li>
+      <li>Multiple job roles and cities</li>
+      <li>Example dataset and CSV export</li>
+      <li>Salary visualization</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>
+  <span>DevSalary AI · Indian Developer Salary Prediction System</span>
+  <span>Built with ❤️ using HTML, CSS & JavaScript</span>
+</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const roleBase = {
+  "Software Developer": 500000,
+  "AI / ML Engineer": 700000,
+  "Web Developer": 400000,
+  "Data Analyst": 450000,
+  "Backend Developer": 550000,
+  "Frontend Developer": 450000
+};
+
+const cityBonus = {
+  "Pune": 50000,
+  "Bengaluru": 150000,
+  "Mumbai": 120000,
+  "Hyderabad": 90000,
+  "Delhi NCR": 100000,
+  "Chennai": 80000,
+  "Other": 0
+};
+
+const skillBonus = {
+  "Python": 50000,
+  "JavaScript": 30000,
+  "Java": 45000,
+  "Machine Learning": 100000,
+  "SQL": 20000,
+  "React": 40000,
+  "C++": 45000
+};
+
+function estimateSalary(role, exp, city, skill) {
+  // Illustrative formula only; not a trained AI model.
+  const base = roleBase[role] || 450000;
+  const experiencePart = exp * 90000;
+  const locationPart = cityBonus[city] || 0;
+  const skillPart = skillBonus[skill] || 0;
+  return Math.round(Math.max(
+    180000,
+    base + experiencePart + locationPart + skillPart
+  ) / 1000) * 1000;
+}
+
+function formatINR(value) {
+  return "₹" + Math.round(value).toLocaleString("en-IN");
+}
+
+$("experience").addEventListener("input", () => {
+  $("expValue").textContent = $("experience").value + " years";
+});
+
+$("salaryForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const role = $("role").value;
+  const exp = Number($("experience").value);
+  const city = $("city").value;
+  const skill = $("skill").value;
+
+  const annual = estimateSalary(role, exp, city, skill);
+
+  $("annual").textContent = formatINR(annual);
+  $("monthly").textContent = formatINR(annual / 12);
+  $("outRole").textContent = role;
+  $("outExp").textContent = exp + " years";
+  $("outCity").textContent = city;
+  $("outSkill").textContent = skill;
+  $("status").textContent = "✓ Demo estimate calculated successfully.";
+
+  $("status").scrollIntoView({behavior:"smooth", block:"nearest"});
+});
+
+// Sample rows are explicitly illustrative, not collected market data.
+const sampleRows = [
+  ["Software Developer",2,"Pune","Python"],
+  ["AI / ML Engineer",5,"Bengaluru","Machine Learning"],
+  ["Web Developer",1,"Mumbai","JavaScript"],
+  ["Data Analyst",3,"Hyderabad","SQL"],
+  ["Backend Developer",4,"Delhi NCR","Java"],
+  ["Frontend Developer",2,"Chennai","React"],
+  ["Software Developer",6,"Pune","Java"],
+  ["AI / ML Engineer",3,"Mumbai","Python"],
+  ["Web Developer",5,"Bengaluru","React"],
+  ["Data Analyst",1,"Other","SQL"]
+];
+
+const sampleData = sampleRows.map(([role,exp,city,skill]) => ({
+  role, experience:exp, city, skill,
+  annual_salary:estimateSalary(role,exp,city,skill)
+}));
+
+$("datasetRows").innerHTML = sampleData.map(row => `
+<tr>
+  <td>${row.role}</td>
+  <td>${row.experience}</td>
+  <td>${row.city}</td>
+  <td>${row.skill}</td>
+  <td>${row.annual_salary}</td>
+</tr>
+`).join("");
+
+$("download").addEventListener("click", () => {
+  const columns = ["role","experience","city","skill","annual_salary"];
+  const escapeCSV = value =>
+    '"' + String(value).replace(/"/g, '""') + '"';
+
+  const csv = [
+    columns.join(","),
+    ...sampleData.map(row =>
+      columns.map(column => escapeCSV(row[column])).join(",")
+    )
+  ].join("\r\n");
+
+  const blob = new Blob(["\uFEFF" + csv], {
+    type:"text/csv;charset=utf-8;"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "developer_salary_demo.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
